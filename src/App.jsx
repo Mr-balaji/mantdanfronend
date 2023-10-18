@@ -5,6 +5,7 @@ import './App.css'
 import Login from './pages/login'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Dashboard from './pages/dashboard'
+import Multiform from './pages/multipleform'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -14,7 +15,7 @@ function App() {
     <BrowserRouter>
     <Routes>
     <Route path='/' element={<Login />} />
-    <Route path='/dashboard' element={<Dashboard />} />
+    <Route path='/dashboard' element={<Multiform />} />
     </Routes>
     </BrowserRouter>
     </>
