@@ -4,6 +4,10 @@ import 'primereact/resources/themes/saga-blue/theme.css'; // You can choose a di
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
 function MultiForm() {
   const initialFormData = {
     firstName: '',

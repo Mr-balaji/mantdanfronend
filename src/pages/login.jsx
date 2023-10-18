@@ -8,7 +8,7 @@ const Login = () => {
 
   const [userName,setUserName] = useState("");
   const [password,setPassword] = useState("");
-
+  const [error,setError] = useState("")
 
   const navigateTo = useNavigate();
 
@@ -24,7 +24,7 @@ const Login = () => {
     if(res.data.responseStatus === "success"){
       navigateTo("/dashboard")
     }else if(res.data.responseStatus === "error"){
-
+     setError(res.data.responseMsg)
     }
 
   }
@@ -40,6 +40,7 @@ const Login = () => {
       <h2>Log In</h2>
       <p>login here using your username and password</p>
    </header>
+   <h3 className='text-center crediantilmessage'>{error}</h3>
    <br></br>
    <div class="field-set">
 
