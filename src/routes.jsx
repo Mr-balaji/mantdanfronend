@@ -50,13 +50,13 @@ export const routes = [
       {
         icon: <ArrowRightOnRectangleIcon {...icon} />,
         name: "sign in",
-        path: "/sign-in",
+        path: "/",
         element: <SignIn />,
       },
       {
         icon: <UserPlusIcon {...icon} />,
         name: "sign up",
-        path: "/sign-up",
+        path: "/",
         element: <SignUp />,
       },
     ],
