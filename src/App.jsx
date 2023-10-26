@@ -5,9 +5,9 @@ import { SignIn } from "./pages/auth";
 function App() {
   return (
     <Routes>
-      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/auth/*" element={<Auth />} />
-      {/* <Route path="/" element={<SignIn />} /> */}
+      <Route path="/" element={<SignIn />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
     </Routes>
   );
