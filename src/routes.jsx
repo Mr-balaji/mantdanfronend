@@ -5,9 +5,11 @@ import {
   BellIcon,
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
+  PlusCircleIcon
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
+import { AddForm } from "./pages/dashboard/addfrom";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -22,6 +24,12 @@ export const routes = [
         name: "dashboard",
         path: "/home",
         element: <Home />,
+      },
+      {
+        icon: <PlusCircleIcon {...icon} />,
+        name: "Add Data",
+        path: "/addform",
+        element: <AddForm />,
       },
       {
         icon: <UserCircleIcon {...icon} />,
@@ -41,6 +49,8 @@ export const routes = [
         path: "/notifactions",
         element: <Notifications />,
       },
+
+      
     ],
   },
   {
