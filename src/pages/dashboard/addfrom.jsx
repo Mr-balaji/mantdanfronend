@@ -226,7 +226,7 @@ export  function AddForm() {
         mothername,
       };
      
-      const resp = await  PostApiFetch("https://surveybackend-cjev.onrender.com/user/create",formDataObject)
+      const resp = await  PostApiFetch("https://surveybackend-cjev.onrender.com/api/user/create",formDataObject)
       console.log("formMainData",resp);
       if(resp.data.responseStatus === "success"){
         toast.current.show({severity:'success', summary: 'Success', detail:resp.data.responseMsg, life: 3000,sticky: true });
