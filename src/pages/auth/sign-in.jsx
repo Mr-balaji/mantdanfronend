@@ -26,7 +26,7 @@ export function SignIn() {
       "email":userName,
       "password":password,
     }
-    const res = await PostApiFetch('http://localhost:5000/api/admin/login',payloadDta);
+    const res = await PostApiFetch('https://surveybackend-cjev.onrender.com/api/admin/login',payloadDta);
 
     if(res.data.responseStatus === "success"){
       navigateTo("/dashboard/home")

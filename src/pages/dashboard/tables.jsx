@@ -29,7 +29,7 @@ export function Tables() {
 
 
   const apiFetch = async() =>{
-    const resp = await getApiFetch("http://localhost:5000/api/user");
+    const resp = await getApiFetch("https://surveybackend-cjev.onrender.com/api/user");
     console.log("resp",resp);
     if(resp.data.responseStatus === "success"){
       setTableData(resp.data.responseData);
