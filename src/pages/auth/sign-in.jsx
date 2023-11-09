@@ -44,8 +44,8 @@ export function SignIn() {
         <Card className="absolute top-2/4 left-2/4 w-full max-w-[40rem] -translate-y-2/4 -translate-x-2/4">
         
           <CardBody className="flex flex-col gap-4">
-            <Input onChange={(e)=>setUserName(e.target.value)}  type="email" label="User Name" size="xl" />
-            <Input  onChange={(e)=>setPassword(e.target.value)}  type="password" label="Password" size="xl" />
+            <Input onChange={(e)=>setUserName(e.target.value)}  type="email" label="युजरचे नाव" size="xl" />
+            <Input  onChange={(e)=>setPassword(e.target.value)}  type="password" label="पासवर्ड" size="xl" />
            
           </CardBody>
           <CardFooter className="pt-0">
