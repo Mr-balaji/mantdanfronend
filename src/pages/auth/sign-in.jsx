@@ -29,7 +29,7 @@ export function SignIn() {
     const res = await PostApiFetch('https://surveybackend-cjev.onrender.com/api/admin/login',payloadDta);
 
     if(res.data.responseStatus === "success"){
-      navigateTo("/dashboard/home")
+      navigateTo("/tables")
     }else if(res.data.responseStatus === "error"){
      setError(res.data.responseMsg)
     }

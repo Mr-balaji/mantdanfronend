@@ -247,4 +247,15 @@ button {
 
 .form-container-div button, input, optgroup, select, textarea {
   padding: 2% !important;
+  border: 2px solid aqua;
+}
+
+
+
+.tablediv .pi{
+ display: none;
+}
+
+.p-dropdown{
+  border: 2px solid aqua  !important;
 }

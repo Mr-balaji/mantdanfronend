@@ -11,7 +11,7 @@ import {
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { authorsTableData, projectsTableData } from "@/data";
 import { getApiFetch } from "@/common/getapiFeatch";
-import {React,useEffect, useState} from "react";
+import {React,useEffect, useRef, useState} from "react";
 import { classNames } from 'primereact/utils';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
@@ -22,10 +22,16 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Tag } from 'primereact/tag';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { ProgressSpinner } from "primereact/progressspinner";
+import { DashboardNavbar } from "@/widgets/layout";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Toast } from 'primereact/toast';
+
 export function Tables() {
 
   const [tableData,setTableData] = useState([]);
   const [isLoading,setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
 
   const apiFetch = async() =>{
@@ -37,10 +43,12 @@ export function Tables() {
     }
 
   }
+  const toast = useRef(null);
+
 
   useEffect(() => {
     apiFetch();
-  }, [])
+  }, [isLoading])
 
    const CustomerService = {
     getData() {
@@ -9088,7 +9096,7 @@ export function Tables() {
   });
   const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  
+    console.log("filters",filters);
   const [statuses] = useState(['unqualified', 'qualified', 'new', 'negotiation', 'renewal']);
 
   useEffect(() => {
@@ -9127,8 +9135,37 @@ export function Tables() {
       );
   };
 
+  const deleteRecord = async(id) =>
+  { 
+     const resp  = axios.delete(`https://surveybackend-cjev.onrender.com/api/user/${id}`);
+    setIsLoading(true)
+     
+    if(resp.data.responseStatus === "success"){
+        setIsLoading(false)
+        toast.current.show({severity:'success', summary: 'Success', detail:resp.data.responseMsg, life: 3000,sticky: true });
+      }else if(resp.data.responseStatus === "error"){
+        toast.current.show({severity:'success', summary: 'Success', detail:resp.data.responseMsg, life: 3000,sticky: true });
+      }
+  }
+
+  const editClick  = (id) =>{
+    navigate(`/addform/${id}`)
+  }
+
   const verifiedBodyTemplate = (rowData) => {
-      return <i className={classNames('pi', { 'true-icon pi-check-circle': rowData.verified, 'false-icon pi-times-circle': !rowData.verified })}></i>;
+    return (
+        <>
+        <div className="flex justify-between w-[30%] ">
+            <div className="px-4  bg-[#ddd2d2] rounded-md ">
+        <button onClick={()=>editClick(rowData._id)}>Edit</button>
+        </div>
+        <div className="px-4  bg-[#8c3535] rounded-md ml-3 text-[#fff]">
+        <button onClick={()=>deleteRecord(rowData._id)}>Delete</button>
+        </div>
+        </div>
+        </>
+    )
+    //   return <i className={classNames('pi', { 'true-icon pi-check-circle': rowData.verified, 'false-icon pi-times-circle': !rowData.verified })}></i>;
   };
 
   const verifiedRowFilterTemplate = (options) => {
@@ -9141,239 +9178,51 @@ export function Tables() {
 
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
-      {/* <Card>
-        <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            Authors Table
-          </Typography>
-        </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
-            <thead>
-              <tr>
-                {["author", "function", "status", "employed", ""].map((el) => (
-                  <th
-                    key={el}
-                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
-                  >
-                    <Typography
-                      variant="small"
-                      className="text-[11px] font-bold uppercase text-blue-gray-400"
-                    >
-                      {el}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
-                      ? ""
-                      : "border-b border-blue-gray-50"
-                  }`;
+         <Toast ref={toast} position='top-center' />
 
-                  return (
-                    <tr key={name}>
-                      <td className={className}>
-                        <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" />
-                          <div>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-semibold"
-                            >
-                              {name}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
-                            </Typography>
-                          </div>
-                        </div>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
-                        </Typography>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Chip
-                          variant="gradient"
-                          color={online ? "green" : "blue-gray"}
-                          value={online ? "online" : "offline"}
-                          className="py-0.5 px-2 text-[11px] font-medium"
-                        />
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {date}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          as="a"
-                          href="#"
-                          className="text-xs font-semibold text-blue-gray-600"
-                        >
-                          Edit
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            Projects Table
-          </Typography>
-        </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
-            <thead>
-              <tr>
-                {["companies", "members", "budget", "completion", ""].map(
-                  (el) => (
-                    <th
-                      key={el}
-                      className="border-b border-blue-gray-50 py-3 px-5 text-left"
-                    >
-                      <Typography
-                        variant="small"
-                        className="text-[11px] font-bold uppercase text-blue-gray-400"
-                      >
-                        {el}
-                      </Typography>
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {projectsTableData.map(
-                ({ img, name, members, budget, completion }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === projectsTableData.length - 1
-                      ? ""
-                      : "border-b border-blue-gray-50"
-                  }`;
-
-                  return (
-                    <tr key={name}>
-                      <td className={className}>
-                        <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" />
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {name}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={className}>
-                        {members.map(({ img, name }, key) => (
-                          <Tooltip key={name} content={name}>
-                            <Avatar
-                              src={img}
-                              alt={name}
-                              size="xs"
-                              variant="circular"
-                              className={`cursor-pointer border-2 border-white ${
-                                key === 0 ? "" : "-ml-2.5"
-                              }`}
-                            />
-                          </Tooltip>
-                        ))}
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          variant="small"
-                          className="text-xs font-medium text-blue-gray-600"
-                        >
-                          {budget}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <div className="w-10/12">
-                          <Typography
-                            variant="small"
-                            className="mb-1 block text-xs font-medium text-blue-gray-600"
-                          >
-                            {completion}%
-                          </Typography>
-                          <Progress
-                            value={completion}
-                            variant="gradient"
-                            color={completion === 100 ? "green" : "blue"}
-                            className="h-1"
-                          />
-                        </div>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          as="a"
-                          href="#"
-                          className="text-xs font-semibold text-blue-gray-600"
-                        >
-                          <EllipsisVerticalIcon
-                            strokeWidth={2}
-                            className="h-5 w-5 text-inherit"
-                          />
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-        </CardBody>
-      </Card> */}
+    
   {
     isLoading ?
     // <div className="w-[100%] h-[100vh] justify-center items-center    border border-[red]">
     <ProgressSpinner style={{ width: '150px', height: '80vh' }} />
     // </div>
     : 
-    <div className="card relative">
-            <DataTable value={tableData} paginator rows={10} dataKey="id"  filterDisplay="row" loading={loading}
-                    globalFilterFields={['firstName', 'country.name', 'email', 'status']} header={header} emptyMessage="No customers found.">
-                {/* <Column field="firstName" filterElement={<InputText onInput={(e) => onCustomFilter(e, 'firstName')} />} filterField="firstName"  header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} /> */}
-                <Column header="नाव" field="firstName" filterField="firstName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="नाव" />
-                <Column header="वडिलांचे  नाव" field="fatherName" filterField="fatherName" filterPlaceholder="वडिलांचे  नाव"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                <Column header="आडनाव" field="lastName" filterField="lastName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="आडनाव" />
-                <Column header="ईमेल आयडी" field="email" filterField="email" filterPlaceholder="ईमेल आयडी"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                     <Column header="जन्मदिनांक-" field="DOB" filterField="DOB" filterPlaceholder="जन्मदिनांक-"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                     <Column header="धर्म-" field="cast" filterField="cast" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                     <Column header="पत्ता-" field="address" filterField="address" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                    <Column header="व्यवसाय-" field="profession" filterField="profession" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                     <Column header="शिक्षण" field="education" filterField="education" filterPlaceholder="शिक्षण"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                    <Column header="आधार कार्ड" field="adharnumber" filterField="adharnumber" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    filter />
-                
-                {/* <Column field="status" header="Status" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} /> */}
-                <Column field="verified" header="Verified" dataType="boolean" style={{ minWidth: '6rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedRowFilterTemplate} />
-            </DataTable>
-        </div>
+    <>
+    <DashboardNavbar />
+     <div className="card relative tablediv">
+
+<div className="flex justify-end mb-3 mr-10">
+<a className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " href={"/addform"}>Add Data</a>
+</div>
+
+   <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id" filters={filters}  filterDisplay="row" loading={loading}
+           globalFilterFields={['firstName', 'country.name', 'email', 'status']} header={header} emptyMessage="No customers found.">
+       {/* <Column field="firstName" filterElement={<InputText onInput={(e) => onCustomFilter(e, 'firstName')} />} filterField="firstName"  header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} /> */}
+       <Column header="नाव" field="firstName" filterField="firstName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="नाव" />
+       <Column header="वडिलांचे  नाव" field="fatherName" filterField="fatherName" filterPlaceholder="वडिलांचे  नाव"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+       <Column header="आडनाव" field="lastName" filterField="lastName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="आडनाव" />
+       <Column header="ईमेल आयडी" field="email" filterField="email" filterPlaceholder="ईमेल आयडी"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+            <Column header="जन्मदिनांक-" field="DOB" filterField="DOB" filterPlaceholder="जन्मदिनांक-"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+            <Column header="धर्म-" field="cast" filterField="cast" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+            <Column header="पत्ता-" field="address" filterField="address" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+           <Column header="व्यवसाय-" field="profession" filterField="profession" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+            <Column header="शिक्षण" field="education" filterField="education" filterPlaceholder="शिक्षण"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+           <Column header="आधार कार्ड" field="adharnumber" filterField="adharnumber" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+           filter />
+       
+       {/* <Column field="status" header="Status" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} /> */}
+       <Column header="Action" frozen style={{ width: '250px', height: '57px' }}  body={verifiedBodyTemplate}  filterElement={verifiedRowFilterTemplate} />
+   </DataTable>
+</div>
+    </>
+   
   }
 
     </div>

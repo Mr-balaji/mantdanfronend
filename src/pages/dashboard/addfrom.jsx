@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import React, { useState,useRef, useEffect } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import 'primereact/resources/themes/saga-blue/theme.css'; // You can choose a different theme
 import 'primereact/resources/primereact.min.css';
@@ -11,6 +11,12 @@ import { InputTextarea } from "primereact/inputtextarea";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { PostApiFetch } from '@/common/postapi';
 import { Toast } from 'primereact/toast';
+import { DashboardNavbar } from '@/widgets/layout';
+import { TabPanel, TabView } from 'primereact/tabview';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { getApiFetch } from '@/common/getapiFeatch';
+
 
 export  function AddForm() {
   const initialFormData = {
@@ -73,6 +79,17 @@ export  function AddForm() {
     mothername: '',
   };
   const [formDataList, setFormDataList] = useState([initialFormData]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isEditMode,setIsEditMode] = useState(false);
+  
+  const { id } = useParams();
+
+  const handleChange = (e) => {
+    // e.index represents the index of the selected tab
+    setActiveIndex(e.index);
+    // Your custom logic here
+    console.log(`Tab changed to index ${e.index}`);
+  };
 
   function getInitialFormData() {
     return {
@@ -225,8 +242,15 @@ export  function AddForm() {
         language,
         mothername,
       };
-     
-      const resp = await  PostApiFetch("https://surveybackend-cjev.onrender.com/api/user/create",formDataObject)
+
+      var resp ;
+     if(isEditMode) {
+        resp = await  axios.put(`https://surveybackend-cjev.onrender.com/api/user/${id}`,formDataObject)
+
+     }else{
+       resp = await  PostApiFetch("https://surveybackend-cjev.onrender.com/api/user/create",formDataObject)
+
+     }
       console.log("formMainData",resp);
       if(resp.data.responseStatus === "success"){
         toast.current.show({severity:'success', summary: 'Success', detail:resp.data.responseMsg, life: 3000,sticky: true });
@@ -248,14 +272,54 @@ export  function AddForm() {
     {name:'other'},
   ]
 
+  const handleClisk = () =>{
+    const nextIndex = (activeIndex + 1) % 6
+    console.log("nextIndex",activeIndex);
+ 
+    setActiveIndex(nextIndex);
+  }
+
+  const handlePrev = () =>{
+    const nextIndex = (activeIndex - 1) % 6;
+    console.log("nextIndex",nextIndex);
+    setActiveIndex(nextIndex);
+  }
+  console.log("activeIndex",activeIndex);
+
+
+  const dataFeatchById  = async() =>{
+    // Check if 'id' is present in the URL, indicating edit mode
+    if (id) {
+      const resp  = await getApiFetch(`https://surveybackend-cjev.onrender.com/api/user/${id}`)
+      setFormDataList([resp.data.responseData])
+      setIsEditMode(true);
+    } else {
+      // Clear form data if not in edit mode
+      // setFormData({ /* initial form data */ });
+      setIsEditMode(false);
+    }
+  }
+
+  useEffect(() => {
+    dataFeatchById();
+  }, [id]);
+   
   return (
     <>
-    <form onSubmit={handleSubmit} >
+    <DashboardNavbar />
+
+   
+    {/* <form  > */}
         {formDataList.map((formData, index) => (
           <div key={index} className='form-container-div'>
+            <Link to={"/tables"} className='bg-[green] py-3 text-[#fff] px-3 ml-5 rounded-md mt-3' >Back</Link>
          <Toast ref={toast} position='top-center' />
-            <div className="form-container">
-              <div className="form-group">
+            <div className="px-3 py-5">
+
+            <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+    <TabPanel header="Form 1" className=''>
+      <div className='grid grid-cols-3 gap-3'>
+    <div className="form-group ">
                 <label htmlFor={`firstName-${index}`}>नाव-</label>
                 <InputText
                   id={`firstName-${index}`}
@@ -287,7 +351,7 @@ export  function AddForm() {
                 <label for="gender">लिंग</label>
                 <div className=" ">
                 <Dropdown value={formData.gender} onChange={(e) => handleInputChange(index, 'gender', e.target.value)} options={gendorOption} optionLabel="name"
-                placeholder="Select a City" className="w-full md:w-14rem" />
+                placeholder="Select Gender" className="w-full md:w-14rem" />
                 </div>
               </div>
               <div className="form-group">
@@ -314,14 +378,19 @@ export  function AddForm() {
               <div className="form-group">
                 <label for="address">पत्ता</label>
                 <InputTextarea   value={formData.address}
-                  onChange={(e) => handleInputChange(index, 'address', e.target.value)} cols={36} rows={3}  id="address" name="address" / >
+                  onChange={(e) => handleInputChange(index, 'address', e.target.value)} cols={50} rows={2}  id="address" name="address" / >
               </div>
               <div className="form-group">
                 <label for="familyno">कुटुंब नं.</label>
                 <input type="text" value={formData.familyno}
                   onChange={(e) => handleInputChange(index, 'familyno', e.target.value)} id="familyno" name="familyno" />
               </div>
-              <div className="form-group">
+              </div>
+    </TabPanel>
+    <TabPanel header="Form 2">
+    <div className='grid grid-cols-3 gap-3'>
+
+    <div className="form-group">
                 <label for="homeno">घर नं.</label>
                 <input type="text"   value={formData.homeno}
                   onChange={(e) => handleInputChange(index, 'homeno', e.target.value)} id="homeno" name="homeno" />
@@ -366,7 +435,13 @@ export  function AddForm() {
                 <input type="text" value={formData.pannumber}
                   onChange={(e) => handleInputChange(index, 'pannumber', e.target.value)} id="pannumber" name="pannumber" />
               </div>
-              <div className="form-group">
+              </div>
+    </TabPanel>
+    <TabPanel header="Form 3">
+    <div className='grid grid-cols-3 gap-3'>
+
+    <div className="form-group">
+
                 <label for="voteridNumber">वोटर आयडी</label>
                 <input type="text" value={formData.voteridNumber}
                   onChange={(e) => handleInputChange(index, 'voteridNumber', e.target.value)} id="voteridNumber" name="voteridNumber" />
@@ -411,22 +486,22 @@ export  function AddForm() {
                 <input type="text" value={formData.incomtax}
                   onChange={(e) => handleInputChange(index, 'incomtax', e.target.value)} id="incomtax" name="incomtax" />
               </div>
+              
+              </div>
+    </TabPanel>
+    <TabPanel header="Form 4">
+    <div className='grid grid-cols-3 gap-3'>
+    
+    <div class="form-group">
+                <label for="healthissue">आजार</label>
+                <input type="text" value={formData.healthissue}
+                  onChange={(e) => handleInputChange(index, 'healthissue', e.target.value)} name="healthissue" id="healthissue" />
+              </div>
               <div className="form-group">
                 <label for="smoking">व्यसन</label>
                 <input type="text" value={formData.smoking}
                   onChange={(e) => handleInputChange(index, 'smoking', e.target.value)}  id="smoking" name="smoking" />
               </div>
-              {/* <div className="form-group">
-                <label for="smoking">Smoking</label>
-                <input type="text" onChange={handleInputChange} id="smoking" name="smoking" />
-              </div> */}
-
-              <div class="form-group">
-                <label for="healthissue">आजार</label>
-                <input type="text" value={formData.healthissue}
-                  onChange={(e) => handleInputChange(index, 'healthissue', e.target.value)} name="healthissue" id="healthissue" />
-              </div>
-
               <div class="form-group">
                 <label for="apagatv">अपंगत्व:</label>
                 <input type="text" value={formData.apagatv}
@@ -469,7 +544,20 @@ export  function AddForm() {
                   onChange={(e) => handleInputChange(index, 'photo', e.target.value)} name="photo" id="photo" />
               </div>
 
-              <div class="form-group">
+            
+
+              
+
+
+              </div>
+             
+     
+    </TabPanel>
+
+    <TabPanel header="Form 5">
+    <div className='grid grid-cols-3 gap-3'>
+
+    <div class="form-group">
                 <label for="chand">छंद:</label>  
                 <input type="text" value={formData.chand}
                   onChange={(e) => handleInputChange(index, 'chand', e.target.value)} name="chand" id="chand" />
@@ -512,88 +600,105 @@ export  function AddForm() {
               </div>
 
               <div class="form-group">
-                <label for="rajkiypad">Rajkiyapad:</label>
+                <label for="rajkiypad">राजकीय पद :</label>
                 <input type="text" value={formData.rajkiypad}
                   onChange={(e) => handleInputChange(index, 'rajkiypad', e.target.value)} name="rajkiypad" id="rajkiypad" />
               </div>
 
               <div class="form-group">
-                <label for="sampanti">Sampanti:</label>
+                <label for="sampanti">संपत्ती:</label>
                 <input type="text" value={formData.sampanti}
                   onChange={(e) => handleInputChange(index, 'sampanti', e.target.value)} name="sampanti" id="sampanti" />
               </div>
 
-              <div class="form-group">
-                <label for="arthikvishleshan">Arthik Vishleshan:</label>
+              
+
+             </div>
+              </TabPanel>
+
+              <TabPanel header="Form 6">
+    <div className='grid grid-cols-3 gap-3'>
+    <div class="form-group">
+                <label for="arthikvishleshan">आर्थिक विश्लेषण:</label>
                 <input type="text" value={formData.arthikvishleshan}
                   onChange={(e) => handleInputChange(index, 'arthikvishleshan', e.target.value)} name="arthikvishleshan" id="arthikvishleshan" />
               </div>
-
               <div class="form-group">
-                <label for="rajkiyvishleshan">Rajkiy Vishleshan:</label>
+                <label for="rajkiyvishleshan">राजकीय विश्लेषण:</label>
                 <input type="text" value={formData.rajkiyvishleshan}
                   onChange={(e) => handleInputChange(index, 'rajkiyvishleshan', e.target.value)} name="rajkiyvishleshan" id="rajkiyvishleshan" />
               </div>
 
               <div class="form-group">
-                <label for="rajkiypaksh">Rajkiy Paksh:</label>
+                <label for="rajkiypaksh">राजकीय पक्ष:</label>
                 <input type="text" value={formData.rajkiypaksh}
                   onChange={(e) => handleInputChange(index, 'rajkiypaksh', e.target.value)} name="rajkiypaksh" id="rajkiypaksh" />
               </div>
 
               <div class="form-group">
-                <label for="panyachastrot">Panya Chastrot:</label>
+                <label for="panyachastrot">पाण्याचे स्त्रोत:</label>
                 <input type="text" value={formData.panyachastrot}
                   onChange={(e) => handleInputChange(index, 'panyachastrot', e.target.value)}  name="panyachastrot" id="panyachastrot" />
               </div>
 
               <div class="form-group">
-                <label for="chaviconection">Chavi Connection:</label>
+                <label for="chaviconection">चावी कनेक्शन:</label>
                 <input type="text" value={formData.chaviconection}
                   onChange={(e) => handleInputChange(index, 'chaviconection', e.target.value)}  name="chaviconection" id="chaviconection" />
               </div>
 
               <div class="form-group">
-                <label for="gharphala">Ghar Phala:</label>
+                <label for="gharphala">घरफाळा:</label>
                 <input type="text"  value={formData.gharphala}
                   onChange={(e) => handleInputChange(index, 'gharphala', e.target.value)}   name="gharphala" id="gharphala" />
               </div>
 
               <div class="form-group">
-                <label for="panipatti">Panipatti:</label>
+                <label for="panipatti">पाणीपट्टी:</label>
                 <input type="text" value={formData.panipatti}
                   onChange={(e) => handleInputChange(index, 'panipatti', e.target.value)} name="panipatti" id="panipatti" />
               </div>
 
               <div class="form-group">
-                <label for="kaushalya">Kaushalya:</label>
+                <label for="kaushalya">कौशल्य:</label>
                 <input type="text" value={formData.kaushalya}
                   onChange={(e) => handleInputChange(index, 'kaushalya', e.target.value)} name="kaushalya" id="kaushalya" />
               </div>
 
               <div class="form-group">
-                <label for="gyasconnection">Gyas Connection:</label>
+                <label for="gyasconnection">गॅस कनेक्शन :</label>
                 <input type="text" value={formData.gyasconnection}
                   onChange={(e) => handleInputChange(index, 'gyasconnection', e.target.value)} name="gyasconnection" id="gyasconnection" />
               </div>
 
               <div class="form-group">
-                <label for="lightconnection">Light Connection:</label>
+                <label for="lightconnection">लाईट  कनेक्शन :</label>
                 <input type="text" value={formData.lightconnection}
                   onChange={(e) => handleInputChange(index, 'lightconnection', e.target.value)} name="lightconnection" id="lightconnection" />
               </div>
 
               <div class="form-group">
-                <label for="language">Language:</label>
+                <label for="language"> माहीत असणारी/येणारी  भाषा :</label>
                 <input type="text"  value={formData.language}
                   onChange={(e) => handleInputChange(index, 'language', e.target.value)} name="language" id="language" />
               </div>
 
               <div class="form-group">
-                <label for="mothername">Mother's Name:</label>
+                <label for="mothername">आईचे  नाव :</label>
                 <input type="text" value={formData.mothername}
                   onChange={(e) => handleInputChange(index, 'mothername', e.target.value)} name="mothername" id="mothername" />
+                  
               </div>
+              </div>
+              </TabPanel>
+</TabView>
+            
+              
+              
+              {/* <div className="form-group">
+                <label for="smoking">Smoking</label>
+                <input type="text" onChange={handleInputChange} id="smoking" name="smoking" />
+              </div> */}
 
 
             </div>
@@ -605,12 +710,25 @@ export  function AddForm() {
             
           </div>
         ))}
-
-
+        <div className="px-3 py-5">
+        <div className='flex justify-between mt-3 '>
+       <button className='bg-[aqua]  border px-3 py-3 rounded-md' disabled={activeIndex === 0 ? true : false} onClick={handlePrev} >Prev</button>
+       {
+        activeIndex === 5 ?
         <div className="submitbtn">
-          <button type="submit">Submit</button>
-        </div>
-      </form>
+        <button type="submit" onClick={handleSubmit}>Submit</button>
+      </div>
+        :
+        <button className='bg-[green] text-[#fff]  border px-3 py-3 rounded-md' onClick={handleClisk}>Next</button>
+         
+       }
+       </div>
+     
+       </div>
+
+
+      
+      {/* </form> */}
 
     </>
   );
