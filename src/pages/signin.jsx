@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useState } from "react";
-import { PostApiFetch } from "@/common/postapi";
+import { PostApiFetch } from "../common/postapi";
 
 export function SignIn() {
 

@@ -1,20 +1,30 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { Dashboard, Auth } from "@/layouts";
-import { SignIn } from "./pages/auth";
-import "./index.css"
-import { Tables } from "./pages/dashboard";
-import { AddForm } from "./pages/dashboard/addfrom";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { AddForm } from './pages/Addform'
+import SignIn from './pages/signin'
+import Tables from './pages/tables'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Routes>
-      <Route path="/tables/*" element={<Tables />} />
-      <Route path="/auth/*" element={<Auth />} />
-      <Route path="/addform" element={<AddForm />} />
-      <Route path="/addform/:id" element={<AddForm />} />
-      <Route path="/" element={<SignIn />} />
-    </Routes>
-  );
+    <>
+     <BrowserRouter>
+     <Routes >
+      <Route path="/addfromdata" element={<AddForm />}  />
+      <Route path="/addform/:id" element={<AddForm />}  />
+
+      <Route path="/" element={<SignIn />}  />
+      <Route path="/tables" element={<Tables />}  />
+
+
+     </Routes>
+     </BrowserRouter>
+    </>
+  )
 }
 
-export default App;
+export default App

@@ -9,13 +9,10 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-import { PostApiFetch } from '@/common/postapi';
 import { Toast } from 'primereact/toast';
-import { DashboardNavbar } from '@/widgets/layout';
 import { TabPanel, TabView } from 'primereact/tabview';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { getApiFetch } from '@/common/getapiFeatch';
 
 
 export  function AddForm() {
@@ -248,7 +245,7 @@ export  function AddForm() {
         resp = await  axios.put(`https://surveybackend-cjev.onrender.com/api/user/${id}`,formDataObject)
 
      }else{
-       resp = await  PostApiFetch("https://surveybackend-cjev.onrender.com/api/user/create",formDataObject)
+       resp = await  axios.post("https://surveybackend-cjev.onrender.com/api/user/create",formDataObject)
 
      }
       console.log("formMainData",resp);
@@ -284,12 +281,12 @@ export  function AddForm() {
     console.log("nextIndex",nextIndex);
     setActiveIndex(nextIndex);
   }
+  console.log("activeIndex",activeIndex);
 
 
   const dataFeatchById  = async() =>{
-    // Check if 'id' is present in the URL, indicating edit mode
     if (id) {
-      const resp  = await getApiFetch(`https://surveybackend-cjev.onrender.com/api/user/${id}`)
+      const resp  = await axios.get(`https://surveybackend-cjev.onrender.com/api/user/${id}`)
       setFormDataList([resp.data.responseData])
       setIsEditMode(true);
     } else {
@@ -305,10 +302,8 @@ export  function AddForm() {
    
   return (
     <>
-    <DashboardNavbar />
 
    
-    {/* <form  > */}
         {formDataList.map((formData, index) => (
           <div key={index} className='form-container-div'>
             <Link to={"/tables"} className='bg-[green] py-3 text-[#fff] px-3 ml-5 rounded-md mt-3' >Back</Link>
@@ -694,10 +689,7 @@ export  function AddForm() {
             
               
               
-              {/* <div className="form-group">
-                <label for="smoking">Smoking</label>
-                <input type="text" onChange={handleInputChange} id="smoking" name="smoking" />
-              </div> */}
+            
 
 
             </div>
@@ -705,8 +697,6 @@ export  function AddForm() {
 
             </div>
 
-            {/* ... add other form fields here */}
-            
           </div>
         ))}
         <div className="px-3 py-5">
@@ -724,10 +714,6 @@ export  function AddForm() {
        </div>
      
        </div>
-
-
-      
-      {/* </form> */}
 
     </>
   );
