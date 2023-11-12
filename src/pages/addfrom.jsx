@@ -285,6 +285,7 @@ export  function AddForm() {
 
 
   const dataFeatchById  = async() =>{
+    // Check if 'id' is present in the URL, indicating edit mode
     if (id) {
       const resp  = await axios.get(`https://surveybackend-cjev.onrender.com/api/user/${id}`)
       setFormDataList([resp.data.responseData])
@@ -304,6 +305,7 @@ export  function AddForm() {
     <>
 
    
+    {/* <form  > */}
         {formDataList.map((formData, index) => (
           <div key={index} className='form-container-div'>
             <Link to={"/tables"} className='bg-[green] py-3 text-[#fff] px-3 ml-5 rounded-md mt-3' >Back</Link>
@@ -689,7 +691,10 @@ export  function AddForm() {
             
               
               
-            
+              {/* <div className="form-group">
+                <label for="smoking">Smoking</label>
+                <input type="text" onChange={handleInputChange} id="smoking" name="smoking" />
+              </div> */}
 
 
             </div>
@@ -697,6 +702,8 @@ export  function AddForm() {
 
             </div>
 
+            {/* ... add other form fields here */}
+            
           </div>
         ))}
         <div className="px-3 py-5">
@@ -714,6 +721,10 @@ export  function AddForm() {
        </div>
      
        </div>
+
+
+      
+      {/* </form> */}
 
     </>
   );

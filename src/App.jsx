@@ -5,7 +5,7 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SignIn from './pages/signin'
 import Tables from './pages/tables'
-import { AddForm } from './pages/Addform'
+import { AddForm } from './pages/addfrom'
 
 function App() {
   const [count, setCount] = useState(0)
