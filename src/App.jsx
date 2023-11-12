@@ -9,16 +9,10 @@ function App() {
   return (
     <Routes>
       <Route path="/tables/*" element={<Tables />} />
-      {/* <Route path="/tables/*" element={<Tables />} /> */}
-
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/addform" element={<AddForm />} />
       <Route path="/addform/:id" element={<AddForm />} />
-
-
-
       <Route path="/" element={<SignIn />} />
-      {/* <Route path="*" element={<Navigate to="/dashboard/home" replace />} /> */}
     </Routes>
   );
 }
