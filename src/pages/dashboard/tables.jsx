@@ -9192,7 +9192,7 @@ export function Tables() {
      <div className="card relative tablediv">
 
 <div className="flex justify-end mb-3 mr-10">
-<a className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " href={"/addform"}>Add Data</a>
+<Link className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " to={"/addform"}>Add Data</Link>
 </div>
 
    <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id" filters={filters}  filterDisplay="row" loading={loading}

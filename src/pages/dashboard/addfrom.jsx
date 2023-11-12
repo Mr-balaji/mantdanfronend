@@ -284,7 +284,6 @@ export  function AddForm() {
     console.log("nextIndex",nextIndex);
     setActiveIndex(nextIndex);
   }
-  console.log("activeIndex",activeIndex);
 
 
   const dataFeatchById  = async() =>{
