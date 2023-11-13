@@ -1,13 +1,4 @@
-import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-    Avatar,
-    Chip,
-    Tooltip,
-    Progress,
-  } from "@material-tailwind/react";
+
   import {React,useEffect, useRef, useState} from "react";
   import { classNames } from 'primereact/utils';
   import { FilterMatchMode, FilterOperator } from 'primereact/api';
@@ -22,8 +13,7 @@ import {
   import { Link, useNavigate } from "react-router-dom";
   import axios from "axios";
   import { Toast } from 'primereact/toast';
-import { getApiFetch } from "../common/getapiFeatch";
-  
+
   export function Tables() {
   
     const [tableData,setTableData] = useState([]);
@@ -32,7 +22,7 @@ import { getApiFetch } from "../common/getapiFeatch";
   
   
     const apiFetch = async() =>{
-      const resp = await getApiFetch("https://surveybackend-cjev.onrender.com/api/user");
+      const resp = await axios.get("https://surveybackend-cjev.onrender.com/api/user");
       console.log("resp",resp);
       if(resp.data.responseStatus === "success"){
         setTableData(resp.data.responseData);
