@@ -13,8 +13,7 @@ function App() {
       <Route path="/addfromdata" element={<AddForm />}  />
       <Route path="/addform/:id" element={<AddForm />}  />
       <Route path="/signin" element={<SignIn />}  />
-
-
+      <Route path="*" element={<SignIn />}  />
       <Route path="/tables" element={<Tables />}  />
     </Routes>
     </BrowserRouter>
