@@ -13,16 +13,44 @@
   import { Link, useNavigate } from "react-router-dom";
   import axios from "axios";
   import { Toast } from 'primereact/toast';
+import { NavBar } from "../component/navbar";
 
-  export function Tables() {
+  export function Tables(props) {
   
     const [tableData,setTableData] = useState([]);
     const [isLoading,setIsLoading] = useState(true);
+    const [filterObjData,setFilterObj] = useState({});
     const navigate = useNavigate();
+
+    
   
-  
+    useEffect(() => { 
+        // On the other page
+const storedFilterData = localStorage.getItem('filterData');
+const filterData = storedFilterData ? JSON.parse(storedFilterData) : {};
+setFilterObj(filterData)
+     
+    }, [])
+    
+     const getFilteredObject = () => {
+
+        let data = {
+           
+          };
+          let filterObj = {};
+      
+          if (filterObjData?.firstName) {
+            filterObj.firstName = filterObjData.firstName;
+          }
+          
+            data.filters = filterObj;
+      
+          return data;
+     }
+
+     
     const apiFetch = async() =>{
-      const resp = await axios.get("https://surveybackend-cjev.onrender.com/api/user");
+      const resp = await axios.post("http://localhost:5000/api/user/filter" ,getFilteredObject());
       console.log("resp",resp);
       if(resp.data.responseStatus === "success"){
         setTableData(resp.data.responseData);
@@ -9175,6 +9203,7 @@
       // </div>
       : 
       <>
+      <NavBar />
        <div className="card relative tablediv">
   
   <div className="flex justify-end mb-3 mr-10">

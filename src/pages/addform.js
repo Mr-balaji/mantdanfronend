@@ -13,6 +13,7 @@ import { Toast } from 'primereact/toast';
 import { TabPanel, TabView } from 'primereact/tabview';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
+import { NavBar } from '../component/navbar';
 
 
 export  function AddForm() {
@@ -304,7 +305,7 @@ export  function AddForm() {
    
   return (
     <>
-
+   <NavBar />
    
     {/* <form  > */}
         {formDataList.map((formData, index) => (
