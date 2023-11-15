@@ -38,11 +38,23 @@ setFilterObj(filterData)
            
           };
           let filterObj = {};
+          Object.keys(filterObjData).forEach((field) => {
+            if (filterObjData[field]) {
+              filterObj[field] = filterObjData[field];
+            }
+        });
+
       
-          if (filterObjData?.firstName) {
-            filterObj.firstName = filterObjData.firstName;
-          }
-          
+        //   if (filterObjData?.firstName) {
+        //     filterObj.firstName = filterObjData.firstName;
+        //   }
+        //   if (filterObjData?.lastName) {
+        //     filterObj.lastName = filterObjData.lastName;
+        //   }
+
+        //   if (filterObjData?.email) {
+        //     filterObj.email = filterObjData.email;
+        //   }
             data.filters = filterObj;
       
           return data;
