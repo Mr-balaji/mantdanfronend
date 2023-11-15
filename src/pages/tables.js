@@ -9222,7 +9222,7 @@ setFilterObj(filterData)
   <a className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " href={"/addfromdata"}>Add Data</a>
   </div>
   
-     <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id" filters={filters}  filterDisplay="row" loading={loading}
+     <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id"   filterDisplay="row" loading={loading}
              globalFilterFields={['firstName', 'country.name', 'email', 'status']} header={header} emptyMessage="No customers found.">
          {/* <Column field="firstName" filterElement={<InputText onInput={(e) => onCustomFilter(e, 'firstName')} />} filterField="firstName"  header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} /> */}
          <Column header="नाव" field="firstName" filterField="firstName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="नाव" />

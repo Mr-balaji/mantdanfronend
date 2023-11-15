@@ -14,6 +14,8 @@ export const Filter = () => {
       firstName: null,
       lastName: null,
       email: null,
+      gender:null,
+      cast:null
     });
     
 
@@ -64,8 +66,9 @@ Object.keys(selectedValues).forEach((field) => {
       fetchData()
     }, [])
 
+    console.log("dropDownData",dropDownData);
 
-    console.log("selectedValues",selectedValues);
+
 
   return (
    <>
@@ -83,6 +86,17 @@ Object.keys(selectedValues).forEach((field) => {
 
   <div className="card flex justify-content-center">
    <Dropdown value={selectedValues.email} onChange={(e) => handleDropdownChange('email', e.value)} options={dropDownData} optionLabel="email" 
+     placeholder="Select a City" className="w-full md:w-14rem" />
+  </div>
+
+  <div className="card flex justify-content-center">
+   <Dropdown value={selectedValues.gender} onChange={(e) => handleDropdownChange('gender', e.value)} options={dropDownData} optionLabel="gender" 
+     placeholder="Select a City" className="w-full md:w-14rem" />
+  </div>
+
+  
+  <div className="card flex justify-content-center">
+   <Dropdown value={selectedValues.cast} onChange={(e) => handleDropdownChange('cast', e.value)} options={dropDownData} optionLabel="cast" 
      placeholder="Select a City" className="w-full md:w-14rem" />
   </div>
 
