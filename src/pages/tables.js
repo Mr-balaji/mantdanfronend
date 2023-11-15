@@ -50,7 +50,7 @@ setFilterObj(filterData)
 
      
     const apiFetch = async() =>{
-      const resp = await axios.post("http://localhost:5000/api/user/filter" ,getFilteredObject());
+      const resp = await axios.post("https://surveybackend-cjev.onrender.com/api/user/filter" ,getFilteredObject());
       console.log("resp",resp);
       if(resp.data.responseStatus === "success"){
         setTableData(resp.data.responseData);
