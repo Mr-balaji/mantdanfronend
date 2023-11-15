@@ -14,6 +14,7 @@
   import axios from "axios";
   import { Toast } from 'primereact/toast';
 import { NavBar } from "../component/navbar";
+import SignIn from "./sign-in";
 
   export function Tables(props) {
   
@@ -21,7 +22,7 @@ import { NavBar } from "../component/navbar";
     const [isLoading,setIsLoading] = useState(true);
     const [filterObjData,setFilterObj] = useState({});
     const navigate = useNavigate();
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     
   
     useEffect(() => { 
@@ -9131,6 +9132,13 @@ setFilterObj(filterData)
             setCustomers(getCustomers(data));
             setLoading(false);
         });
+
+        const resp = localStorage.getItem("token");
+        const token = JSON.parse(resp)
+       if(token){
+        setIsLoggedIn(true)
+       }
+        console.log("token",token);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
     const getCustomers = (data) => {
@@ -9204,55 +9212,65 @@ setFilterObj(filterData)
   
   
     return (
-      <div className="mt-12 mb-8 flex flex-col gap-12">
-           <Toast ref={toast} position='top-center' />
-  
+        
+     
+   <>
       
     {
       isLoading ?
-      // <div className="w-[100%] h-[100vh] justify-center items-center    border border-[red]">
-      <ProgressSpinner style={{ width: '150px', height: '80vh' }} />
-      // </div>
+      <div className="w-[100%] h-[100vh] justify-center  items-center flex    ">
+      <ProgressSpinner style={{ width: '100%', height: '30vh' }} />
+       </div>
       : 
       <>
-      <NavBar />
-       <div className="card relative tablediv">
-  
-  <div className="flex justify-end mb-3 mr-10">
-  <a className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " href={"/addfromdata"}>Add Data</a>
-  </div>
-  
-     <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id"   filterDisplay="row" loading={loading}
-             globalFilterFields={['firstName', 'country.name', 'email', 'status']} header={header} emptyMessage="No customers found.">
-         {/* <Column field="firstName" filterElement={<InputText onInput={(e) => onCustomFilter(e, 'firstName')} />} filterField="firstName"  header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} /> */}
-         <Column header="नाव" field="firstName" filterField="firstName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="नाव" />
-         <Column header="वडिलांचे  नाव" field="fatherName" filterField="fatherName" filterPlaceholder="वडिलांचे  नाव"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-         <Column header="आडनाव" field="lastName" filterField="lastName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="आडनाव" />
-         <Column header="ईमेल आयडी" field="email" filterField="email" filterPlaceholder="ईमेल आयडी"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-              <Column header="जन्मदिनांक-" field="DOB" filterField="DOB" filterPlaceholder="जन्मदिनांक-"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-              <Column header="धर्म-" field="cast" filterField="cast" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-              <Column header="पत्ता-" field="address" filterField="address" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-             <Column header="व्यवसाय-" field="profession" filterField="profession" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-              <Column header="शिक्षण" field="education" filterField="education" filterPlaceholder="शिक्षण"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-             <Column header="आधार कार्ड" field="adharnumber" filterField="adharnumber" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-             filter />
-         
-         {/* <Column field="status" header="Status" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} /> */}
-         <Column header="Action" frozen style={{ width: '250px', height: '57px' }}  body={verifiedBodyTemplate}  filterElement={verifiedRowFilterTemplate} />
-     </DataTable>
-  </div>
+      {
+        isLoggedIn ?
+        <>
+        <div className="mt-12 mb-8 flex flex-col gap-12">
+        <Toast ref={toast} position='top-center' />
+        <NavBar />
+        <div className="card relative tablediv">
+   
+   <div className="flex justify-end mb-3 mr-10">
+   <a className="px-5 rounded-md py-2 bg-[skyblue] text-[#fff] " href={"/addfromdata"}>Add Data</a>
+   </div>
+   
+      <DataTable value={tableData} paginator scrollable frozenWidth="200px"   rows={10} dataKey="id"   filterDisplay="row" loading={loading}
+              globalFilterFields={['firstName', 'country.name', 'email', 'status']} header={header} emptyMessage="No customers found.">
+          {/* <Column field="firstName" filterElement={<InputText onInput={(e) => onCustomFilter(e, 'firstName')} />} filterField="firstName"  header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} /> */}
+          <Column header="नाव" field="firstName" filterField="firstName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="नाव" />
+          <Column header="वडिलांचे  नाव" field="fatherName" filterField="fatherName" filterPlaceholder="वडिलांचे  नाव"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+          <Column header="आडनाव" field="lastName" filterField="lastName"  style={{ minWidth: '12rem' }} filter filterPlaceholder="आडनाव" />
+          <Column header="ईमेल आयडी" field="email" filterField="email" filterPlaceholder="ईमेल आयडी"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+               <Column header="जन्मदिनांक-" field="DOB" filterField="DOB" filterPlaceholder="जन्मदिनांक-"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+               <Column header="धर्म-" field="cast" filterField="cast" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+               <Column header="पत्ता-" field="address" filterField="address" filterPlaceholder="धर्म"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+              <Column header="व्यवसाय-" field="profession" filterField="profession" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+               <Column header="शिक्षण" field="education" filterField="education" filterPlaceholder="शिक्षण"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+              <Column header="आधार कार्ड" field="adharnumber" filterField="adharnumber" filterPlaceholder="व्यवसाय"  filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+              filter />
+          
+          {/* <Column field="status" header="Status" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} /> */}
+          <Column header="Action" frozen style={{ width: '250px', height: '57px' }}  body={verifiedBodyTemplate}  filterElement={verifiedRowFilterTemplate} />
+      </DataTable>
+   </div>
+   </div>
+   </>
+        :navigate("/signin")
+      }
+    
       </>
      
     }
+    </>
   
-      </div>
     );
   }
   

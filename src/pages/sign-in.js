@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -27,10 +27,11 @@ export function SignIn() {
       "email":userName,
       "password":password,
     }
-    const res = await axios.post('https://surveybackend-cjev.onrender.com/api/admin/login',payloadDta);
-
+    const res = await axios.post('http://localhost:5000/api/admin/login',payloadDta);
+    console.log("payloadDta",res);
     if(res.data.responseStatus === "success"){
       navigateTo("/tables")
+      localStorage.setItem("token",JSON.stringify(res.data.responseData.token))
     }else if(res.data.responseStatus === "error"){
      setError(res.data.responseMsg)
     }

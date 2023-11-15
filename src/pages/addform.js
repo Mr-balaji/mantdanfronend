@@ -12,7 +12,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { Toast } from 'primereact/toast';
 import { TabPanel, TabView } from 'primereact/tabview';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { NavBar } from '../component/navbar';
 
 
@@ -79,7 +79,9 @@ export  function AddForm() {
   const [formDataList, setFormDataList] = useState([initialFormData]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isEditMode,setIsEditMode] = useState(false);
-   
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
+  const navigate = useNavigate();
   const { id } = useParams();
 
 
@@ -283,7 +285,6 @@ export  function AddForm() {
     console.log("nextIndex",nextIndex);
     setActiveIndex(nextIndex);
   }
-  console.log("activeIndex",activeIndex);
 
 
   const dataFeatchById  = async() =>{
@@ -302,10 +303,22 @@ export  function AddForm() {
   useEffect(() => {
     dataFeatchById();
   }, [id]);
+
+  useEffect(() => {
+    const resp = localStorage.getItem("token");
+        const token = JSON.parse(resp)
+       if(token){
+        setIsLoggedIn(true)
+       }
+  }, [])
+  
    
   return (
     <>
-   <NavBar />
+  {
+    isLoggedIn ?
+    <>
+    <NavBar />
    
     {/* <form  > */}
         {formDataList.map((formData, index) => (
@@ -541,14 +554,7 @@ export  function AddForm() {
                 <input type="text" value={formData.photo}
                   onChange={(e) => handleInputChange(index, 'photo', e.target.value)} name="photo" id="photo" />
               </div>
-
-            
-
-              
-
-
               </div>
-             
      
     </TabPanel>
 
@@ -690,21 +696,9 @@ export  function AddForm() {
               </div>
               </TabPanel>
 </TabView>
-            
-              
-              
-              {/* <div className="form-group">
-                <label for="smoking">Smoking</label>
-                <input type="text" onChange={handleInputChange} id="smoking" name="smoking" />
-              </div> */}
-
-
             </div>
             <div className="form-container">
-
             </div>
-
-            {/* ... add other form fields here */}
             
           </div>
         ))}
@@ -723,10 +717,9 @@ export  function AddForm() {
        </div>
      
        </div>
-
-
-      
-      {/* </form> */}
+       </>
+    :navigate("/signin")
+  }
 
     </>
   );
