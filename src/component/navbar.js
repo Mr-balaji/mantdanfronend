@@ -1,5 +1,7 @@
 import {React,useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
 
 export const NavBar = () => {
     const clearFilter = () =>{
