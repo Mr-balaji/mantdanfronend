@@ -19,6 +19,7 @@ export function SignIn() {
   const [userName,setUserName] = useState("");
   const [password,setPassword] = useState("");
   const [error,setError] = useState("")
+  const [buttonText,setButtonText] = useState("प्रवेश करा");
 
   const navigateTo = useNavigate();
 
@@ -28,6 +29,7 @@ export function SignIn() {
       "email":userName,
       "password":password,
     }
+    setButtonText("please wait...")
     const res = await axios.post('https://surveybackend-cjev.onrender.com/api/admin/login',payloadDta);
     console.log("payloadDta",res);
     if(res.data.responseStatus === "success"){
@@ -35,6 +37,8 @@ export function SignIn() {
       localStorage.setItem("token",JSON.stringify(res.data.responseData.token))
     }else if(res.data.responseStatus === "error"){
      setError(res.data.responseMsg)
+    setButtonText("प्रवेश करा")
+
     }
 
   }
@@ -117,7 +121,7 @@ export function SignIn() {
                     <button type="submit" onClick={handleSubmit}
                         class="group relative w-full flex justify-center items-center p-5 border border-transparent text-xl font-bold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       
-                       प्रवेश करा
+                       {buttonText}
                     </button>
                 </div>
             </form>
