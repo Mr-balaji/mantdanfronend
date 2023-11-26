@@ -275,7 +275,6 @@ export  function AddForm() {
 
   const handleClisk = () =>{
     const nextIndex = (activeIndex + 1) % 6
-    console.log("nextIndex",activeIndex);
  
     setActiveIndex(nextIndex);
   }

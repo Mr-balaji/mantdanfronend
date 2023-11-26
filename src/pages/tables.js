@@ -25,7 +25,7 @@ export function Tables(props) {
     const [filterObjData, setFilterObj] = useState({});
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+   
 
     useEffect(() => {
         // On the other page
